@@ -45,7 +45,7 @@ export const updateSingleAuthor = catchAsync(
       .update(value)
       .returning("*");
     sendResponse(res, {
-      message: "Author retrieved successfully",
+      message: "Author updated successfully",
       data: updatedAuthor,
     });
   },
@@ -60,7 +60,7 @@ export const deleteSingleAuthor = catchAsync(
       .delete()
       .returning("*");
     sendResponse(res, {
-      message: "Author retrieved successfully",
+      message: "Author deleted successfully",
       data: deleteAuthor,
     });
   },
@@ -77,7 +77,7 @@ export const createAuthor = catchAsync(async (req: Request, res: Response) => {
 
   const [author] = await db("authors").insert(value).returning("*");
   sendResponse(res, {
-    message: "Author retrieved successfully",
+    message: "Author created successfully",
     data: author || null,
   });
 });
