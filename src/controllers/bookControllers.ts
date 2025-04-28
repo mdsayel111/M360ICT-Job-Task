@@ -6,15 +6,32 @@ import AppError from "../customError";
 import { createBookSchema, updateBookSchema } from "../lib/joi/bookSchema";
 
 export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
-  const { author } = req.query;
+  const { author, filter, page = "1", limit = "10" } = req.query;
 
-  let books;
+  // Parse page and limit to integers
+  const pageValue = parseInt(page as string, 10);
+  const limitValue = parseInt(limit as string, 10);
 
-  if (author) {
-    books = await db.select("*").from("books").where({ author_id: author });
+  // Calculate the number of items to skip based on the current page
+  const skipValue = (pageValue - 1) * limitValue;
+
+  let booksPromise;
+
+  // get books based on the filter author or all query
+  if (filter) {
+    booksPromise = db
+      .select("*")
+      .from("books")
+      .where("title", "ILIKE", `%${filter}%`);
+  } else if (author) {
+    booksPromise = db.select("*").from("books").where({ author_id: author });
   } else {
-    books = await db.select("*").from("books");
+    booksPromise = db.select("*").from("books");
   }
+
+  // add limit and skip to the query
+  booksPromise.offset(skipValue).limit(limitValue);
+  const books = await booksPromise;
   sendResponse(res, {
     message: "book retrieved successfully",
     data: books,
@@ -46,7 +63,7 @@ export const updateSinglebook = catchAsync(
 
     // if data is not valid throw error
     if (error) {
-      throw new AppError(400, error.details[0].message);
+      throw error;
     }
 
     const [updatedbook] = await db("books")
@@ -81,7 +98,7 @@ export const createbook = catchAsync(async (req: Request, res: Response) => {
 
   // if data is not valid throw error
   if (error) {
-    throw new AppError(400, error.details[0].message);
+    throw error;
   }
 
   const [book] = await db("books").insert(value).returning("*");

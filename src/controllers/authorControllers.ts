@@ -9,7 +9,29 @@ import {
 import AppError from "../customError";
 
 export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
-  const authors = await db.select("*").from("authors");
+  const {filter, page = "1", limit = "10"} = req.query;
+  // Parse page and limit to integers
+  const pageValue = parseInt(page as string, 10);
+  const limitValue = parseInt(limit as string, 10);
+
+  // Calculate the number of items to skip based on the current page
+  const skipValue = (pageValue - 1) * limitValue;
+
+  let authorsPromise;
+
+  // get authors based on the filter query
+  if (filter) {
+    authorsPromise = db
+      .select("*")
+      .from("authors")
+      .where("name", "ILIKE", `%${filter}%`);
+  } else {
+    authorsPromise = db.select("*").from("authors");
+  }
+
+  // add limit and skip to the query
+  authorsPromise.offset(skipValue).limit(limitValue);
+  const authors = await authorsPromise;
   sendResponse(res, {
     message: "Author retrieved successfully",
     data: authors,
@@ -43,7 +65,7 @@ export const updateSingleAuthor = catchAsync(
 
     // if data is not valid throw error
     if (error) {
-      throw new AppError(400, error.details[0].message);
+      throw error;
     }
 
     const [updatedAuthor] = await db("authors")
@@ -78,7 +100,7 @@ export const createAuthor = catchAsync(async (req: Request, res: Response) => {
 
   // if data is not valid throw error
   if (error) {
-    throw new AppError(400, error.details[0].message);
+    throw error;
   }
 
   const [author] = await db("authors").insert(value).returning("*");

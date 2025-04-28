@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint  no-unused-vars: "error" */
 import { ErrorRequestHandler } from "express";
+import Joi from "joi";
 import { TErrorObj } from "../types/TError";
 
 // global error handle middleware
@@ -14,16 +15,21 @@ const globalErrorHandleMiddleware: ErrorRequestHandler = (
 ) => {
   // default errObj
   const errObj: TErrorObj = {
-    statusCode: 500,
-    message: "Something went wrong !",
+    statusCode: err.status || 500,
+    message: err.message || "Something went wrong !",
     errorMessages: [
       {
         path: "",
-        message: err.message,
+        message: err.message || "Something went wrong !",
       },
     ],
     stack: "",
   };
+
+  // handle joi error
+  if (err instanceof Joi.ValidationError) {
+    errObj.statusCode = 400;
+  }
 
   // if server run in production delete stack from errObj, so stack doesn't send with response
   if (process.env.NODE_ENV === "production") {
