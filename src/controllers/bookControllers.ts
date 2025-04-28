@@ -16,18 +16,15 @@ export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
   const skipValue = (pageValue - 1) * limitValue;
 
   let booksPromise;
-
-  // get books based on the filter author or all query
-  if (filter) {
-    booksPromise = db
-      .select("*")
-      .from("books")
-      .where("title", "ILIKE", `%${filter}%`);
-  } else if (author) {
-    booksPromise = db.select("*").from("books").where({ author_id: author });
-  } else {
-    booksPromise = db.select("*").from("books");
-  }
+  
+  // get books based on the filter query
+  booksPromise = db
+    .select("*")
+    .from("books")
+    .where(function () {
+      if (author) this.where("author_id", author);
+      if (filter) this.where("title", "ILIKE", `%${filter}%`);
+    });
 
   // add limit and skip to the query
   booksPromise.offset(skipValue).limit(limitValue);

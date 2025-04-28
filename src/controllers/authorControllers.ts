@@ -9,7 +9,7 @@ import {
 import AppError from "../customError";
 
 export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
-  const {filter, page = "1", limit = "10"} = req.query;
+  const { filter, page = "1", limit = "10" } = req.query;
   // Parse page and limit to integers
   const pageValue = parseInt(page as string, 10);
   const limitValue = parseInt(limit as string, 10);
@@ -20,14 +20,12 @@ export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
   let authorsPromise;
 
   // get authors based on the filter query
-  if (filter) {
-    authorsPromise = db
-      .select("*")
-      .from("authors")
-      .where("name", "ILIKE", `%${filter}%`);
-  } else {
-    authorsPromise = db.select("*").from("authors");
-  }
+  authorsPromise = db
+    .select("*")
+    .from("authors")
+    .where(function () {
+      if (filter) this.where("name", "ILIKE", `%${filter}%`);
+    });
 
   // add limit and skip to the query
   authorsPromise.offset(skipValue).limit(limitValue);
