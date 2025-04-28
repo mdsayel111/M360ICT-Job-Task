@@ -6,7 +6,16 @@ import AppError from "../customError";
 import { createBookSchema, updateBookSchema } from "../lib/joi/bookSchema";
 
 export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
-  const books = await db.select("*").from("books");
+  const { author } = req.query;
+  console.log(author);
+
+  let books;
+
+  if (author) {
+    books = await db.select("*").from("books").where({ author_id: author });
+  } else {
+    books = await db.select("*").from("books");
+  }
   sendResponse(res, {
     message: "book retrieved successfully",
     data: books,
