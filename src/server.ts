@@ -1,9 +1,12 @@
 import config from "./config";
-import client from "./DB";
+// import client from "./DB";
 import app from "./routes";
 
+
+
 const main = async () => {
-  await client.connect();
+  // await client.connect();
+  console.log(config);
   app.listen(config.port, () => {
     console.log(`server is running on port ${config.port}`);
   });
