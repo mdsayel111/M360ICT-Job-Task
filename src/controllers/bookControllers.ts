@@ -7,7 +7,6 @@ import { createBookSchema, updateBookSchema } from "../lib/joi/bookSchema";
 
 export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
   const { author } = req.query;
-  console.log(author);
 
   let books;
 
@@ -36,6 +35,12 @@ export const updateSinglebook = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
     const data = req.body;
+
+    const bookFromDB = await db("books").where({ id }).first();
+
+    if (!bookFromDB) {
+      throw new AppError(404, "Book not found");
+    }
 
     const { error, value } = updateBookSchema.validate(data);
 

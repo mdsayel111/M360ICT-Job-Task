@@ -33,6 +33,12 @@ export const updateSingleAuthor = catchAsync(
     const id = req.params.id;
     const data = req.body;
 
+    const authorFromDB = await db("authors").where({ id }).first();
+
+    if (!authorFromDB) {
+      throw new AppError(404, "Author not found");
+    }
+
     const { error, value } = updateAuthorSchema.validate(data);
 
     // if data is not valid throw error
