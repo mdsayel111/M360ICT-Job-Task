@@ -1,6 +1,7 @@
 import express from "express";
 import authorRouter from "./authorRoutes";
 import cors from "cors";
+import globalErrorHandleMiddleware from "../middleware/globalErrorHandleMiddleware";
 const app = express();
 
 // config cors
@@ -18,6 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/authors", authorRouter);
-app.use("/books", authorRouter);
+// app.use("/books", authorRouter);
+
+// add global error handler
+app.use(globalErrorHandleMiddleware);
 
 export default app;

@@ -35,7 +35,7 @@ const globalErrorHandleMiddleware: ErrorRequestHandler = (
     errObj.statusCode = 401;
   }
 
-  console.log(err);
+  console.log(err, "error");
 
   // send response if any error occur
   res.status(errObj.statusCode).send({ success: false, ...errObj });
