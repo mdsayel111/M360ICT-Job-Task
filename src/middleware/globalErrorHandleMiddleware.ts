@@ -5,6 +5,7 @@
 import { ErrorRequestHandler } from "express";
 import Joi from "joi";
 import { TErrorObj } from "../types/TError";
+import jwt from "jsonwebtoken";
 
 // global error handle middleware
 const globalErrorHandleMiddleware: ErrorRequestHandler = (
@@ -29,6 +30,21 @@ const globalErrorHandleMiddleware: ErrorRequestHandler = (
   // handle joi error
   if (err instanceof Joi.ValidationError) {
     errObj.statusCode = 400;
+  }
+
+  // handle jwt error
+  if (
+    err instanceof jwt.JsonWebTokenError ||
+    err instanceof jwt.TokenExpiredError
+  ) {
+    errObj.statusCode = 400;
+    errObj.message = "Invalid token";
+    errObj.errorMessages = [
+      {
+        path: "",
+        message: "Invalid token",
+      },
+    ];
   }
 
   // if server run in production delete stack from errObj, so stack doesn't send with response

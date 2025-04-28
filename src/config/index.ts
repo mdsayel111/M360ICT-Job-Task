@@ -10,4 +10,5 @@ export default {
     port: parseInt(process.env.DB_PORT as string),
     database: process.env.DB_DATABASE,
   },
+  jwtSecret: process.env.JWT_SECRET,
 };
