@@ -4,6 +4,7 @@ import catchAsync from "../middleware/HOF-middleware/catchAsyncMiddleware";
 import sendResponse from "../utils/sendResponse";
 import AppError from "../customClasses/appError";
 import { createBookSchema, updateBookSchema } from "../lib/joi/bookSchema";
+import { TBook } from "../types/TBook";
 
 export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
   const { author, filter, page = "1", limit = "10" } = req.query;
@@ -16,7 +17,7 @@ export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
   const skipValue = (pageValue - 1) * limitValue;
 
   let booksPromise;
-  
+
   // get books based on the filter query
   booksPromise = db
     .select("*")
@@ -28,7 +29,7 @@ export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
 
   // add limit and skip to the query
   booksPromise.offset(skipValue).limit(limitValue);
-  const books = await booksPromise;
+  const books: TBook[] = await booksPromise;
   sendResponse(res, {
     message: "book retrieved successfully",
     data: books,
@@ -37,7 +38,7 @@ export const getAllbooks = catchAsync(async (req: Request, res: Response) => {
 
 export const getSinglebook = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const book = await db("books").where({ id }).first();
+  const book: TBook = await db("books").where({ id }).first();
   console.log(book);
   sendResponse(res, {
     message: "book retrieved successfully",
@@ -63,7 +64,7 @@ export const updateSinglebook = catchAsync(
       throw error;
     }
 
-    const [updatedbook] = await db("books")
+    const [updatedbook]: TBook[] = await db("books")
       .where({ id })
       .update(value)
       .returning("*");
@@ -78,7 +79,7 @@ export const deleteSinglebook = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const [deletebook] = await db("books")
+    const [deletebook]:TBook[] = await db("books")
       .where({ id })
       .delete()
       .returning("*");
@@ -98,7 +99,7 @@ export const createbook = catchAsync(async (req: Request, res: Response) => {
     throw error;
   }
 
-  const [book] = await db("books").insert(value).returning("*");
+  const [book]:TBook[] = await db("books").insert(value).returning("*");
   sendResponse(res, {
     message: "book created successfully",
     data: book || null,

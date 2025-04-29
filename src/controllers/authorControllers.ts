@@ -7,6 +7,7 @@ import {
   updateAuthorSchema,
 } from "../lib/joi/authorSchema";
 import AppError from "../customClasses/appError";
+import { TAuthor } from "../types/TAuthorType";
 
 export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
   const { filter, page = "1", limit = "10" } = req.query;
@@ -29,7 +30,7 @@ export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
 
   // add limit and skip to the query
   authorsPromise.offset(skipValue).limit(limitValue);
-  const authors = await authorsPromise;
+  const authors: TAuthor[] = await authorsPromise;
   sendResponse(res, {
     message: "Author retrieved successfully",
     data: authors,
@@ -39,7 +40,7 @@ export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
 export const getSingleAuthor = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const author = await db("authors").where({ id }).first();
+    const author: TAuthor = await db("authors").where({ id }).first();
     console.log(author);
     sendResponse(res, {
       message: "Author retrieved successfully",
@@ -51,7 +52,7 @@ export const getSingleAuthor = catchAsync(
 export const updateSingleAuthor = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const data = req.body;
+    const data: TAuthor = req.body;
 
     const authorFromDB = await db("authors").where({ id }).first();
 
@@ -66,7 +67,7 @@ export const updateSingleAuthor = catchAsync(
       throw error;
     }
 
-    const [updatedAuthor] = await db("authors")
+    const [updatedAuthor]: TAuthor[] = await db("authors")
       .where({ id })
       .update(value)
       .returning("*");
@@ -81,7 +82,7 @@ export const deleteSingleAuthor = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const [deleteAuthor] = await db("authors")
+    const [deleteAuthor]: TAuthor[] = await db("authors")
       .where({ id })
       .delete()
       .returning("*");
@@ -101,7 +102,7 @@ export const createAuthor = catchAsync(async (req: Request, res: Response) => {
     throw error;
   }
 
-  const [author] = await db("authors").insert(value).returning("*");
+  const [author]: TAuthor[] = await db("authors").insert(value).returning("*");
   sendResponse(res, {
     message: "Author created successfully",
     data: author || null,

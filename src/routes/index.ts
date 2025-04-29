@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import authorRouter from "./authorRoutes";
 import cors from "cors";
 import globalErrorHandleMiddleware from "../middleware/globalErrorHandleMiddleware";
@@ -19,8 +19,8 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("Hello from Express");
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).send("Hello from Express");
 });
 
 app.use("/authors", authMiddleware, authorRouter);
