@@ -20,29 +20,29 @@ DB_DATABASE="Your database name"
 JWT_SECRET="Your secret key"
 ```
 
-## Running command
+## To run project, run the following command
 
-To run project locally, run the following command
+To install dependency
 
 ```bash
   npm install
 ```
-
+To create table to your database:
 ```bash
   npx knex migrate:latest --knexfile=./src/DB/knexfile.ts
 ```
-
+To run project development
 ```bash
   npm run dev
 ```
 
-To build project locally, run the following command
+To build project
 
 ```bash
   npm run build
 ```
 
-To build build version, run the following command
+To build build version
 
 ```bash
   npm run start
