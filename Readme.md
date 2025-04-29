@@ -22,7 +22,7 @@ JWT_SECRET="Your secret key"
 
 ## To run project, run the following command
 
-To install dependency
+To install dependency:
 
 ```bash
   npm install
@@ -31,18 +31,18 @@ To create table to your database:
 ```bash
   npx knex migrate:latest --knexfile=./src/DB/knexfile.ts
 ```
-To run project development
+To run project development:
 ```bash
   npm run dev
 ```
 
-To build project
+To build project:
 
 ```bash
   npm run build
 ```
 
-To build build version
+To run build version:
 
 ```bash
   npm run start
