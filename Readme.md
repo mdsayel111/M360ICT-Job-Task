@@ -61,12 +61,6 @@ To build build version, run the following command
 - user CRUD on book.
 
 ## API
-- /login (POST)
-  - Data
-  ```
-    {
-    "name": "Jane Austen"
-    }
 - /authors?filter=name&page=number&limit=number (GET)
 
 - /authors (POST)
@@ -102,6 +96,14 @@ To build build version, run the following command
     }
   ```
 - /books/:id (DELETE)    
+
+- /login (POST)
+  - Data
+  ```
+    {
+    "name": "Jane Austen"
+    }
+  ```
 
 
 
