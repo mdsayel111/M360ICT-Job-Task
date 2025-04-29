@@ -1,6 +1,24 @@
-# Sports Facility Booking Platform
-This is a basic ecommerce website backend project created with Node.js, Express.js, MongoDB, and Mongoose.
+# Bookstore managing system
+This is a simple project for managing a bookstore.
+The API allow users to perform CRUD (Create, Read, Update, Delete) operations on books and authors.
 
+## ER Diagram
+
+![App Screenshot](https://i.ibb.co.com/JWtttRJz/Screenshot-2025-04-29-232028.png)
+
+
+## Setup .env
+
+Create a .env file on your root directory and paste it:
+```bash
+PORT="Port number"
+DB_USERNAME="Your database username"
+DB_PASSWORD="Your database password"
+DB_HOST="Your database host" (locally it is "localhost")
+DB_PORT="Your database port"
+DB_DATABASE="Your database name"
+JWT_SECRET="Your secret key"
+```
 
 ## Running command
 
@@ -8,6 +26,10 @@ To run project locally, run the following command
 
 ```bash
   npm install
+```
+
+```bash
+  npx knex migrate:latest --knexfile=./src/DB/knexfile.ts
 ```
 
 ```bash
@@ -32,105 +54,54 @@ To build build version, run the following command
 
 ## Features
 
-- user can signup and register.
-- user can book facility.
-- user cancel booking.
-- admin can add facility.
-- admin can delete facility
-
-## admin login:
-```
-  {
-  "email": "web@programming-hero-a.com",
-  "password": "programming-hero"
-  }
-```
-## Live link: 
-https://sports-facility-booking-platform-server.onrender.com/
+- user can create author.
+- user can create book.
+- user can login.
+- user CRUD on author.
+- user CRUD on book.
 
 ## API
-- /api/auth/signup (POST)
+- /login (POST)
+  - Data
+  ```
+    {
+    "name": "Jane Austen"
+    }
+- /authors?filter=name&page=number&limit=number (GET)
+
+- /authors (POST)
   - Data:
    ```
     {
-  "name": "Programming Hero",
-  "email": "web@programming-hero.com",
-  "password": "programming-hero",
-  "phone": "01322901105",
-  "role": "admin", // or 'user'
-  "address": "Level-4, 34, Awal Centre, Banani, Dhaka"
-  }
-- /api/auth/login (POST)
-  - Data
-  ```
-  {
-  "email": "web@programming-hero.com",
-  "password": "programming-hero"
-  }
-- /api/facility (POST) (Admin only)
+        "name": "Jane Austen",
+        "bio": "English novelist known for her six major novels.",
+        "birthdate": "1775-12-30"
+    }
+- /authors/:id (GET)
 
-  - Headers
-     ```
-     Authorization: Bearer JWT_TOKEN
-  - Data
-  ```
-  {
-  "name": "Tennis Court",
-  "description": "Outdoor tennis court with synthetic surface.",
-  "pricePerHour": 30,
-  "location": "456 Sports Ave, Springfield"
-  }
+- /authors/:id (PUT)
+    - Data
+    ```
+    {
+        "Field": "Value"
+    }   
+- /authors/:id (DELETE)
 
-- /api/facility/:id (PUT) (Admin only)
-  - Headers
-    ```
-     Authorization: Bearer JWT_TOKEN
-  - Data
-  ```
-  {
-  "name": "Updated Tennis Court",
-  "description": "Updated outdoor tennis court with synthetic surface.",
-  "pricePerHour": 35,
-  "location": "789 Sports Ave, Springfield"
-  }
-- /api/facility/:id (DELETE) (Admin only)
-  - Headers
-    ```
-     Authorization: Bearer JWT_TOKEN
-- /api/facility (GET)
-- /api/check-availability?date=2024-06-15 (GET)
-- /api/bookings (POST) (User only)
-  - Headers
-  ```
-     Authorization: Bearer JWT_TOKEN
-  ```
+- /books?author=id&filter=title&page=number&limit=number (GET) 
+
+- /books/:id (GET) 
+
+- /books (POST) 
   - Data
   ```
     {
-    "facility": "60d9c4e4f3b4b544b8b8d1c5",
-    "date": "2024-06-15",
-    "startTime": "10:00",
-    "endTime": "13:00"
+        "title": "Pride and Prejudice",
+        "description": "A romantic novel that explores manners, upbringing, morality, education, and marriage in early 19th-century England.",
+        "published_date": "1813-01-22",
+        "author_id": 1
     }
   ```
-- /api/bookings (GET) (Admin only)
-  - Headers
-  ```
-     Authorization: Bearer JWT_TOKEN
-  ```
-- /api/bookings/user (GET) (User only)
-
-  - Headers
-  ```
-     Authorization: Bearer JWT_TOKEN
-  ```
-- /api/bookings/:id (DELETE) (User only)
-
-  - Headers
-  ```
-     Authorization: Bearer JWT_TOKEN
-  ```
-    
+- /books/:id (DELETE)    
 
 
 
