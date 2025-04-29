@@ -6,7 +6,7 @@ import {
   createAuthorSchema,
   updateAuthorSchema,
 } from "../lib/joi/authorSchema";
-import AppError from "../customError";
+import AppError from "../customClasses/appError";
 
 export const getAllAuthors = catchAsync(async (req: Request, res: Response) => {
   const { filter, page = "1", limit = "10" } = req.query;

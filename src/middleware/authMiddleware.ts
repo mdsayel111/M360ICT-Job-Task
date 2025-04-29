@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "../config";
-import AppError from "../customError";
+import AppError from "../customClasses/appError";
 import catchAsync from "./HOF-middleware/catchAsyncMiddleware";
 
 const authMiddleware = catchAsync(

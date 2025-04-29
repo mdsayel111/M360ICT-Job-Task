@@ -3,7 +3,7 @@ import db from "../DB/knex";
 import { loginSchema } from "../lib/joi/loginSchema";
 import catchAsync from "../middleware/HOF-middleware/catchAsyncMiddleware";
 import sendResponse from "../utils/sendResponse";
-import AppError from "../customError";
+import AppError from "../customClasses/appError";
 import jwt from "jsonwebtoken";
 import config from "../config";
 
