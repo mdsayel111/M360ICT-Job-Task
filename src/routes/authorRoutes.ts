@@ -6,13 +6,14 @@ import {
   getSingleAuthor,
   updateSingleAuthor,
 } from "../controllers/authorControllers";
+import authMiddleware from "../middleware/authMiddleware";
 
 const authorRouter = express.Router();
 
 authorRouter
-  .get("/", getAllAuthors)
-  .get("/:id", getSingleAuthor)
+  .get("/", authMiddleware, getAllAuthors)
+  .get("/:id", authMiddleware, getSingleAuthor)
   .post("/", createAuthor)
-  .put("/:id", updateSingleAuthor)
-  .delete("/:id", deleteSingleAuthor);
+  .put("/:id", authMiddleware, updateSingleAuthor)
+  .delete("/:id", authMiddleware, deleteSingleAuthor);
 export default authorRouter;

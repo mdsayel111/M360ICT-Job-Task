@@ -23,7 +23,7 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Hello from Express");
 });
 
-app.use("/authors", authMiddleware, authorRouter);
+app.use("/authors", authorRouter);
 app.use("/books", authMiddleware, bookRouter);
 app.use("/login", loginRouter);
 
